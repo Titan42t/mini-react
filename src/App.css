@@ -1,0 +1,18 @@
+.app {
+  padding-left: 20px;
+}
+
+.insertTask {
+  display: flex;
+  gap: 20px;
+}
+
+.insertTask button {
+  background: #b6b6b6;
+  border-radius: 50px;
+}
+
+.lists {
+  display: flex;
+  gap: 20px;
+}

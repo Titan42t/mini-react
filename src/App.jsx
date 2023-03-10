@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import './App.css'
 
 export function App() {
@@ -9,10 +9,13 @@ export function App() {
   function handleChange() {
     setForm({
       ...form,
-      [input.name]: input.value
+      [input.current.name]: input.current.value
     })
-    console.log(form)
   }
+
+  useEffect(() => {
+    console.log(form)
+  }, [form])
 
   function handleSubmit(event) {
     event.preventDefault()
@@ -21,7 +24,7 @@ export function App() {
       ...todos,
       {
         name: form.todo,
-        state: STATE.TODO
+        state: 'STATE.TODO'
       }
     ])
 
@@ -32,12 +35,13 @@ export function App() {
   }
 
   function handleClick(item) {
+    console.log(item.name)
     const newTodos = todos.map(function(elem) {
       if(elem.name !== item.name) return elem
 
       return {
         ...elem,
-        state: item.state === STATE.DONE ? STATE.TODO : STATE.DONE
+        state: item.state === 'STATE.DONE' ? 'STATE.TODO' : 'STATE.DONE'
       }
     })
 
@@ -47,24 +51,35 @@ export function App() {
   return (
     <div className="app">
       <form className='insertTask'>
-        <input name="todo" ref={input} onChange={() => handleChange()} value={form.todo} placeholder="Saississez le nom de la tâche..."/>
+        <input name="todo" ref={input} onChange={() => handleChange()} value={form.todo} placeholder="Nom de la tâche"/>
         <button className='Enregistrer' onClick={(event) => handleSubmit(event)}>Enregistrer</button>
       </form>
       <div className='lists'>
-        <div className='divToDo'>
+        <div className='divToDo list'>
           <h1>TO DO</h1>
-          <ul>
-            {todos.filter(function (item) {
-              return item.state === STATE.TODO
-            }).map(function (item) {
-              return (
-                  <li key={item}></li>
-              )
-            })}
-          </ul>
+          {todos.filter(function (item) {
+            return item.state === 'STATE.TODO'
+          }).map(function (item) {
+            return (
+              <div className='taskTodo' key={item}>
+                <p>{item.name}</p>
+                <button onClick={(item) => handleClick(item)}>DONE</button>
+              </div>
+            )
+          })}
         </div>
-        <div className='divDo'>
+        <div className='divDo list'>
           <h1>DO</h1>
+          {todos.filter(function (item) {
+            return item.state === 'STATE.DONE'
+          }).map(function (item) {
+            return (
+              <div className='taskTodo' key={item}>
+                <p>{item.name}</p>
+                <button onClick={({item}) => handleClick(item)}>TODO</button>
+              </div>
+            )
+          })}
         </div>
       </div>
     </div>
